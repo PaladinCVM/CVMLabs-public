@@ -1,0 +1,58 @@
+﻿@model RegisterViewModel
+@{
+    ViewBag.Title = "Sign up";
+}
+
+<div class="text-center">
+    <h1 class="display-5">CVMLabs - Sign up</h1>
+</div>
+
+<div class="card box-shadow mx-auto mt-5" style="width: 25rem;">
+    <div class="card-body">
+        <form method="post">
+            <div class="mb-3">
+                <label for="usernameSignUpInput" class="form-label">Username</label>
+                <input type="text" class="form-control" id="usernameSignUpInput" asp-for="Username" />
+                <div class="invalid-feedback" style="display:block;">
+                    <span asp-validation-for="Username"></span>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="emailSignUpInput" class="form-label">E-mail</label>
+                <input type="email" class="form-control" id="emailSignUpInput" asp-for="Email" />
+                <div class="invalid-feedback" style="display:block;">
+                    <span asp-validation-for="Email"></span>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="passwordSignUpInput" class="form-label">Password</label>
+                <input type="password" class="form-control" id="passwordSignUpInput" asp-for="Password" />
+                <div class="invalid-feedback" style="display:block;">
+                    <span asp-validation-for="Password"></span>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="passwordConfirmSignUpInput" class="form-label">Confirm password</label>
+                <input type="password" class="form-control" id="passwordConfirmSignUpInput" asp-for="ConfirmPassword" />
+                <div class="invalid-feedback" style="display:block;">
+                    <span asp-validation-for="ConfirmPassword"></span>
+                </div>
+            </div>
+            <div id="genderGroup" class="mb-3">
+                <label for="genderGroup" class="form-label">Gender</label>
+                <div class="form-check">
+                    <label for="genderMaleSignUpInput" class="form-check-label">Male</label>
+                    <input type="radio" class="form-check-input" name="genderRadio" id="genderMaleSignUpInput" checked/>
+                </div>
+                <div class="form-check">
+                    <label for="genderFemaleSignUpInput" class="form-check-label">Female</label>
+                    <input type="radio" class="form-check-input" name="genderRadio" id="genderFemaleSignUpInput"/>
+                </div>
+            </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Sign up</button>
+            </div>
+            
+        </form>
+    </div>
+</div>

@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    @await Html.PartialAsync("MetatagsPartial")
+    @await Html.PartialAsync("CssPartial")
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-dark navbar-expand-lg bg-dark box-shadow">
+            <div class="container">
+                <span class="navbar-brand">CVMLabs</span>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <div class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                        <a class="nav-link" asp-controller="Home" asp-action="About">About</a>
+                    </div>
+                    @{
+                        if (SignInManager.IsSignedIn(User))
+                        {
+                            var user = await UserManager.GetUserAsync(User);
+
+                            <div class="d-flex navbar-nav">
+                                <a class="nav-link me-3" asp-controller="Account" asp-action="Profile">@user.UserName</a>
+                                <a class="btn btn-danger" asp-controller="Account" asp-action="Signout">Sign out</a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="d-flex navbar-nav">
+                                <a class="btn btn-outline-light me-2" asp-controller="Account" asp-action="Signin">Sign in</a>
+                                <a class="btn btn-primary" asp-controller="Account" asp-action="Signup">Sign up</a>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container content">
+        <main role="main" class="mb-5 pt-4">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; @DateTime.Now.Year CVMLabs
+        </div>
+    </footer>
+    @await Html.PartialAsync("ScriptsPartial")
+</body>
+</html>

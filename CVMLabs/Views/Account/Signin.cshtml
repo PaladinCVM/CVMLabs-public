@@ -1,0 +1,36 @@
+﻿@model LoginViewModel
+@{
+    ViewBag.Title = "Sign in";
+}
+
+<div class="text-center">
+    <h1 class="display-5">CVMLabs - Sign in</h1>
+</div>
+
+<div class="card box-shadow mx-auto mt-5" style="width: 25rem;">
+    <div class="card-body">
+        <form method="post" asp-controller="Account" asp-action="Signin">
+            <div class="mb-3 has-validation">
+                <label for="usernameSignInInput" class="form-label">Username</label>
+                <input type="text" class="form-control" id="usernameSignInInput" asp-for="Username" />
+                <div class="invalid-feedback" style="display:block;">
+                    <span asp-validation-for="Username"></span>
+                </div>
+            </div>
+            <div class="mb-3 has-validation">
+                <label for="passwordSignInInput" class="form-label">Password</label>
+                <input type="password" class="form-control" id="passwordSignInInput" asp-for="Password" />
+                <div class="invalid-feedback" style="display:block;">
+                    <span asp-validation-for="Password"></span>
+                </div>
+            </div>
+            <div class="mb-3 form-check">
+                <label class="form-check-label" for="checkSignInRememberMe">Remember me</label>
+                <input type="checkbox" class="form-check-input" id="checkSignInRememberMe" asp-for="RememberMe" />
+            </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Sign in</button>
+            </div>
+        </form>
+    </div>
+</div>

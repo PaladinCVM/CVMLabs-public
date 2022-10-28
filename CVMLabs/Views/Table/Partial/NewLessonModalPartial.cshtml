@@ -1,0 +1,20 @@
+﻿@model CVMLabs.Domain.Entities.LessonModel
+
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="createNewLessonModalLabel">New lesson (@Model.Subject.SubjectTitle)</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <form method="post" id="createNewLessonForm" asp-controller="Table" asp-action="CreateNewLesson">
+            <label for="createNewLessonInput" class="form-label">Lesson date:</label>
+            <input type="date" class="form-control" id="createLessonDateInput" asp-for="LessonDate" />
+            <input type="hidden" asp-for="Subject.Id" />
+            <input type="hidden" asp-for="Subject.SubjectTitle" />
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary" form="createNewLessonForm">Create</button>
+    </div>
+</div>

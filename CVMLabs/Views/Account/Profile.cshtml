@@ -1,0 +1,184 @@
+﻿
+@model ProfileViewModel
+
+@{
+    ViewBag.Title = "Profile";
+    
+    var userId = UserManager.GetUserId(User);
+    var user = await ContextManager.Users
+    .Include(appUser => appUser.UserStudents)
+    .Include(appUser => appUser.UserSubjects)
+    .SingleOrDefaultAsync(u => u.Id == userId);
+}
+
+<div class="container">
+    <div class="row gy-5">
+        <div class="col-lg-4 ">
+            <div class="card box-shadow">
+                <div class="card-header text-center">
+                    <h4>Subjects list</h4>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createNewSubjectModal">Create new subject</button>
+                    </div>
+                    <div class="container mt-3">
+                        <table class="table table-hover" id="profileSubjectsTable">
+                            @if (user?.UserSubjects is not null)
+                            {
+                                foreach (var subject in user.UserSubjects)
+                                {
+                                    <tr>
+                                        <td class="align-middle">
+                                            <span class="fw-semibold">@subject.SubjectTitle</span>
+                                        </td>
+                                        <td class="d-flex justify-content-end">
+                                            <div class="dropdown">
+                                                <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Actions
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" asp-controller="Table" asp-action="Index" asp-route-id=@subject.Id>Open</a></li>
+                                                    <li><a class="dropdown-item subject-edit-btn" id="@subject.Id">Edit</a></li>
+                                                    <li>
+                                                        <form method="post" asp-controller="Account" asp-action="DeleteSubject" asp-route-id=@subject.Id>
+                                                            <button class="dropdown-item">Delete</button>
+                                                        </form>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card box-shadow">
+                <div class="card-header text-center">
+                    <h4>Students list</h4>
+                </div>
+                <div class="card-body">
+                    @await Html.PartialAsync("Partial/NewStudentPartial", Model.StudentModel)
+                    <div class="container mt-3">
+                        <table class="table table-hover" id="profileStudentsTable">
+                            @if (user?.UserStudents is not null)
+                            {
+                                foreach (var student in user.UserStudents)
+                                {
+                                    <tr>
+                                        <td class="align-middle">
+                                            <span class="fw-semibold">@student.Name</span>
+                                        </td>
+                                        <td class="d-flex justify-content-end">
+                                            <a class="btn btn-primary student-edit-btn mx-2" id="@student.Id">Edit</a>
+                                            <form method="post" asp-controller="Account" asp-action="DeleteStudent" asp-route-id=@student.Id>
+                                                <button class="btn btn-danger ms-2">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card box-shadow">
+                <div class="card-header text-center">
+                    <h4>@user</h4>
+                </div>
+                <div class="card-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12">
+                                <form method="post" asp-controller="Account" asp-action="ProfilePersonalInfoChanging">
+                                    <h5 class="mb-3">Edit personal information</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="usernameProfileInput">Username</label>
+                                        <input type="text" class="form-control" id="usernameProfileInput" asp-for="UserInfoModel.Username" />
+                                        <span asp-validation-for="UserInfoModel.Username"></span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="emailProfileInput">E-mail</label>
+                                        <input type="email" class="form-control" id="emailProfileInput" asp-for="UserInfoModel.Email" />
+                                        <span asp-validation-for="UserInfoModel.Email"></span>
+                                    </div>
+                                    <button type="submit" class="btn btn-success">Save changes</button>
+                                </form>
+                                <hr />
+                                <form method="post" asp-controller="Account" asp-action="Profile">
+                                    <h5 class="mb-3">Change password</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="oldPasswordProfileInput">Old password</label>
+                                        <input type="password" class="form-control" id="oldPasswordProfileInput" asp-for="UserPasswordModel.OldPassword" />
+                                        <span asp-validation-for="UserPasswordModel.OldPassword"></span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="newPasswordProfileInput">New password</label>
+                                        <input type="password" class="form-control" id="newPasswordProfileInput" asp-for="UserPasswordModel.NewPassword" />
+                                        <span asp-validation-for="UserPasswordModel.NewPassword"></span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label" for="newPasswordConfirmProfileInput">Confirm password</label>
+                                        <input type="password" class="form-control" id="newPasswordConfirmProfileInput" asp-for="UserPasswordModel.ConfirmNewPassword" />
+                                        <span asp-validation-for="UserPasswordModel.ConfirmNewPassword"></span>
+                                    </div>
+                                    <button type="submit" class="btn btn-success">Save password</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* MODAL SECTION *@
+<div class="modal fade" id="createNewSubjectModal" tabindex="-1" aria-labelledby="createNewSubjectModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        @await Html.PartialAsync("Partial/NewSubjectPartial", Model.SubjectModel);
+    </div>
+</div>
+
+<div class="modal fade" id="editSubjectModal" tabindex="-1" aria-labelledby="editSubjectModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" id="editSubjectModalContent">
+    </div>
+</div>
+
+<div class="modal fade" id="editStudentModal" tabindex="-1" aria-labelledby="editStudentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" id="editStudentModalContent">
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.1.js"
+        integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI="
+        crossorigin="anonymous"></script>
+
+<script type="text/javascript" language="javascript">
+    // Getting pop-up bootstrap modal on Subject & Student Edit Button click
+    $(document).ready(function () {
+        $('.student-edit-btn').click(function () {
+            let url = '@Url.Action("EditStudentModalCall")' + '/' + this.id;
+            $.get(url, function (data) {
+                $('#editStudentModalContent').html(data);
+                $('#editStudentModal').modal('show');
+            });
+        });
+    });
+
+    $(document).ready(function () {
+        $('.subject-edit-btn').click(function () {
+            let url = '@Url.Action("EditSubjectModalCall")' + '/' + this.id;
+            $.get(url, function (data) {
+                $('#editSubjectModalContent').html(data);
+                $('#editSubjectModal').modal('show');
+            });
+        });
+    });
+</script>

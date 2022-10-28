@@ -1,0 +1,167 @@
+﻿@model SubjectTableViewModel
+@{
+    ViewBag.Title = $"{Model.SubjectModel.SubjectTitle}";
+
+    var userId = UserManager.GetUserId(User);
+    var user = await ContextManager.Users
+    .Include(appUser => appUser.UserStudents)
+    .Include(appUser => appUser.UserSubjects)
+    .SingleOrDefaultAsync(u => u.Id == userId);
+}
+<div class="text-center">
+    <span class="display-6">@Model.SubjectModel.SubjectTitle</span>
+    <p class="lead mt-2">@Model.Lessons.Count lessons</p>
+</div>
+
+<div class="card mx-auto mt-4 box-shadow" style="width: 90%;">
+    <div class="card-body mx-2">
+        <button class="btn btn-success" style="width: 100%" data-bs-toggle="modal" data-bs-target="#createNewLessonModal">Add lesson</button>
+        <div class="container subject-table-container">
+            <div class="row">
+                <div class="px-0">
+                    <table class="subject-table mt-3" id="subjectTable">
+                        @if (user?.UserStudents is not null)
+                        {
+                            <thead>
+                                <tr>
+                                    <th>Student/Lesson date</th>
+                                    @if (Model.Lessons.Any()) 
+                                    {
+                                        foreach (var lesson in Model.Lessons) 
+                                        {
+                                            <th>
+                                                <button type="button" class="lesson-col-btn fw-semibold" data-bs-toggle="dropdown">@lesson.LessonDate.ToShortDateString()</button>
+                                                <div class="dropdown">
+                                                    <ul class="dropdown-menu">
+                                                        <li><a class="dropdown-item lesson-edit-btn" id="@lesson.Id">Edit</a></li>
+                                                        <li>
+                                                            <form method="post" asp-action="DeleteLesson" asp-route-id="@lesson.Id">
+                                                                <input type="hidden" asp-for="SubjectModel.Id" />
+                                                                <input type="hidden" asp-for="SubjectModel.SubjectTitle" />
+                                                                <button class="dropdown-item">Delete</button>
+                                                            </form>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </th>
+                                        }
+                                    }
+                                    <th class="px-3">Stats</th>
+                                </tr>
+                            </thead>
+                            foreach (var student in user.UserStudents)
+                            {
+                                int attendCount = Model.Lessons
+                                .SelectMany(lesson => lesson.AttendanceStates)
+                                .Where(state => state.Student == student)
+                                .Where(state => state.State == LessonState.Attend).Count();
+
+                                int absentCount = Model.Lessons
+                                .SelectMany(lesson => lesson.AttendanceStates)
+                                .Where(state => state.Student == student)
+                                .Where(state => state.State == LessonState.Absent).Count();;
+                                <tr>
+                                    <td class="align-middle">
+                                        <span class="fw-semibold">@student.Name</span>
+                                    </td>
+                                    @foreach (var lesson in Model.Lessons) 
+                                    {
+                                        var lessonAttendanceStateModel = lesson.AttendanceStates.Find(s => s.Student == student);
+                                        Model.LessonModel = lesson;
+                                        Model.StudentModel = student;
+                                        Model.AttendanceStateModel = lessonAttendanceStateModel!;
+                                        <td>
+                                            @switch (lessonAttendanceStateModel?.State)
+                                            {
+                                                case LessonState.Attend:
+                                                    <button type="button" class="lesson-state-btn btn-attend" data-bs-toggle="dropdown">
+                                                    </button>
+                                                    break;
+                                                case LessonState.Absent:
+                                                    <button type="button" class="lesson-state-btn btn-absent" data-bs-toggle="dropdown">
+                                                    </button>
+                                                    break;
+                                                default:
+                                                    <button type="button" class="lesson-state-btn btn-not-stated" data-bs-toggle="dropdown">
+                                                    </button>
+                                                    break;
+                                            }
+                                            <div class="dropdown">
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <form method="post" asp-action="SetLessonState">
+                                                            <input type="hidden" asp-for="SubjectModel.Id" />
+                                                            <input type="hidden" asp-for="LessonModel.Id" />
+                                                            <input type="hidden" asp-for="StudentModel.Id" />
+                                                            <input type="hidden" asp-for="AttendanceStateModel.State" value="@LessonState.Attend" />
+                                                            <button class="dropdown-item">Attend</button>
+                                                        </form>
+                                                    </li>
+                                                    <li>
+                                                        <form method="post" asp-action="SetLessonState">
+                                                            <input type="hidden" asp-for="SubjectModel.Id" />
+                                                            <input type="hidden" asp-for="LessonModel.Id" />
+                                                            <input type="hidden" asp-for="StudentModel.Id" />
+                                                            <input type="hidden" asp-for="AttendanceStateModel.State" value="@LessonState.Absent" />
+                                                            <button class="dropdown-item">Absent</button>
+                                                        </form>
+                                                    </li>
+                                                    <li>
+                                                        <form method="post" asp-action="SetLessonState">
+                                                            <input type="hidden" asp-for="SubjectModel.Id" />
+                                                            <input type="hidden" asp-for="LessonModel.Id" />
+                                                            <input type="hidden" asp-for="StudentModel.Id" />
+                                                            <input type="hidden" asp-for="AttendanceStateModel.State" value="@LessonState.NotStated" />
+                                                            <button class="dropdown-item">Not stated</button>
+                                                        </form>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    }
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <span class="fw-semibold attend-text">@attendCount</span>
+                                            <span class="fw-semibold">/</span>
+                                            <span class="fw-semibold absent-text">@absentCount</span>
+                                        </div>
+                                        
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="createNewLessonModal" tabindex="-1" aria-labelledby="createNewLessonModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        @await Html.PartialAsync("Partial/NewLessonModalPartial", Model.LessonModel);
+    </div>
+</div>
+
+<div class="modal fade" id="editLessonModal" tabindex="-1" aria-labelledby="editLessonModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" id="editLessonModalContent">
+        
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.1.js"
+        integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI="
+        crossorigin="anonymous"></script>
+
+<script type="text/javascript" language="javascript">
+    $(document).ready(function () {
+        $('.lesson-edit-btn').click(function () {
+            let url = '@Url.ActionLink("EditLessonModalCall")' + '/' + this.id;
+            $.get(url, function (data) {
+                console.log(data);
+                $('#editLessonModalContent').html(data);
+                $('#editLessonModal').modal('show');
+            })
+        })
+    })
+</script>

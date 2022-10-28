@@ -1,0 +1,19 @@
+﻿@model CVMLabs.Domain.Entities.SubjectModel
+
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="createNewSubjectModalLabel">New subject</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <form method="post" id="createNewSubjectForm" asp-controller="Account" asp-action="CreateNewSubject">
+            <label for="createNewSubjectInput" class="form-label">Subject title:</label>
+            <input type="text" class="form-control" id="createNewSubjectInput" asp-for="SubjectTitle" />
+            <span asp-validation-for="SubjectTitle"></span>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary" form="createNewSubjectForm">Create</button>
+    </div>
+</div>

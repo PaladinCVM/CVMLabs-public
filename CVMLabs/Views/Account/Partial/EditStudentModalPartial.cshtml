@@ -1,0 +1,19 @@
+﻿@model CVMLabs.Domain.Entities.StudentModel
+
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="editStudentModalLabel">Edit student</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body">
+        <form method="post" id="editStudentForm" asp-controller="Account" asp-action="EditStudent" asp-route-id=@Model.Id>
+            <label for="editStudentInput" class="form-label">Student name:</label>
+            <input type="text" class="form-control" id="editStudentInput" asp-for="Name" value="@Model.Name" />
+            <span asp-validation-for="Name"></span>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-success" form="editStudentForm">Save changes</button>
+    </div>
+</div>

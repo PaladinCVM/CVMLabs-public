@@ -1,0 +1,99 @@
+﻿.subject-table-container {
+    overflow: auto;
+}
+
+.subject-table tr td, .subject-table thead th {
+    border: 1px solid;
+    border-color: #aeaeae;
+    padding: 0;
+}
+
+.subject-table thead {
+    background-color: #e5e5e5;
+}
+
+.subject-table tr:hover {
+    background-color: #e5e5e5;
+}
+
+.subject-table td, th {
+    position: relative;
+}
+
+.subject-table td:first-child, .subject-table thead th:first-child {
+    padding: 6px;
+    min-width: 180px;
+}
+
+.lesson-state-btn {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    opacity: 0;
+    border: none;
+}
+
+.lesson-col-btn {
+    display: inline-block;
+    width: 100%;
+    height: 80px;
+    background-color: transparent;
+    border: none;
+}
+
+.lesson-state-btn:hover {
+    opacity: 0.7;
+}
+
+.lesson-col-btn:hover {
+    background-color: #cbcbcb;
+}
+
+.btn-attend {
+    opacity: 1;
+    background: #10a826;
+}
+
+.btn-absent {
+    opacity: 1;
+    background: #bf100e;
+}
+
+.btn-not-stated {
+    background: #ffffff;
+}
+
+.btn-not-stated:hover {
+    background: #cbcbcb;
+    opacity: 1;
+}
+
+.attend-text {
+    color: #10a826;
+}
+
+.absent-text {
+    color: #bf100e;
+}
+
+/*.stats-data {
+    background-color: #e5e5e5;
+}*/
+
+.link {
+    text-decoration: none;
+}
+
+.box-shadow {
+    box-shadow: rgb(0, 0, 0, 0.4) 0 5px 20px;
+}
+
+.content {
+    min-height: calc(100vh - 120px);
+}
+
+.footer {
+    line-height: 60px;
+    height: 40px;
+}

@@ -1,0 +1,9 @@
+﻿@model CVMLabs.Domain.Entities.StudentModel
+
+<form method="post" asp-controller="Account" asp-action="CreateNewStudent">
+    <div class="d-flex">
+        <input type="text" class="form-control mx-3" id="addNewStudentProfileInput" asp-for="Name" />
+        <span asp-validation-for="Name"></span>
+        <input type="submit" value="Add student" class="btn btn-primary me-3" id="addStudentBtn" />
+    </div>
+</form>

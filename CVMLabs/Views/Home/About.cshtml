@@ -1,0 +1,47 @@
+﻿@{
+    ViewBag.Title = "About";
+}
+
+<div class="text-center">
+    <h1 class="display-5">CVMLabs - About</h1>
+</div>
+
+<div class="container mt-5" style="max-width: 1000px">
+    <div class="row my-5">
+        <div class="col">
+            <p class="display-6">
+                Students section have to be filled first. Type student name in the text field and bring
+                your group together. Every student can be edited or deleted from list anytime.
+            </p>
+        </div>
+        <div class="col d-flex align-items-center">
+            <img src="~/img/students.png" class="img-thumbnail" width="500"/>
+        </div>
+    </div>
+    <hr>
+    <div class="row my-5">
+        <div class="col">
+            <img src="~/img/subjects.png" class="img-thumbnail" />
+        </div>
+        <div class="col d-flex align-items-center">
+            <p class="display-6">
+                Add subjects according to your curriculum in the subjects section. 
+            </p>
+        </div> 
+    </div>
+    <hr>
+    <div class="row my-5 text-center">
+        <div class="col">
+            <img src="~/img/table.png" class="img-thumbnail" />
+        </div>
+    </div>
+    <div class="row mt-5 text-center">
+        <div class="col">
+            <p class="display-6">
+                Fill up your table with lessons. Table will be formed automatically.
+                Just set the attendance by clicking on the specific rectangle.
+            </p>
+            <a class="display-6 link" asp-controller="Account" asp-action="Profile">Let's give it a fresh start</a>
+        </div>
+    </div>
+</div>
